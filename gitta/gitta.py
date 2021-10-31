@@ -31,7 +31,7 @@ class Gitta():
         if self.verbose:
             print(conn_str)
         content = os.popen(f'curl -s {conn_str}').read()
-        assert content != '404: Not Found', f'{src} not found in ace!'
+        assert content != '404: Not Found', f'{src} not found in gitta!'
         if print_stdout:
             print(content)
         else:  # export to same filename
@@ -85,13 +85,14 @@ class Gitta():
 
 
 help_text = """
+Usage: 
+
 $ pip install -q git+https://git@github.com/suredream/guitar.git@master
 """
 
-
 def main():
     print('gitta is comming')
-    run = Gitta()
+    run = Gitta(verbose=True)
     dict_dep = {'aws': ('~aws/credentials', 'awscli')}
     if len(sys.argv) > 1:
         cmd = sys.argv[1]
@@ -105,7 +106,9 @@ def main():
             run.push(amend_commit=cmd == 'update')
         else:  # fetch cred & snippets
             for cmd in sys.argv[1:]:
-                if cmd in dict_dep:
+                if cmd.startswith('-'): # options
+                    continue
+                elif cmd in dict_dep:
                     cred, packages = dict_dep[cmd]
                     run(cred, pip=packages)
                 else:  # snippets in mlops
