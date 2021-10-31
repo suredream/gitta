@@ -4,18 +4,14 @@
 import os, sys
 from getpass import getpass
 
-__version__ = "0.3.0"
+__version__ = "0.0.1"
 
 import sys, subprocess
 
 
 # from .stuff import Stuff
 class Gitta():
-    def __init__(self,
-                 components='',
-                 user='suredream',
-                 repo='mlops',
-                 verbose=False):
+    def __init__(self, user='suredream', repo='mlops', verbose=False):
         self.user = user
         self.repo = f'https://github.com/{user}/{repo}'
         self.token = self.get_token()
@@ -71,9 +67,7 @@ class Gitta():
         )
         os.system(f"git clone {repo_name}")
         if not keep_dir_level:
-            os.system(
-                f"mv {repo}/.git . && rm -rf {repo} && git reset --hard"
-            )
+            os.system(f"mv {repo}/.git . && rm -rf {repo} && git reset --hard")
 
     def push(self, repo, amend_commit=False):
         os.system('git add -u')
@@ -85,15 +79,29 @@ class Gitta():
 
 
 help_text = """
-Usage: 
+Install: 
 
 $ pip install -q git+https://git@github.com/suredream/guitar.git@master
+
+Usage: 
+$ gitta aws
+$ gitta clone <repo>
+$ gitta helpers.py -o
+
 """
+
 
 def main():
     print('gitta is comming')
     run = Gitta(verbose=True)
-    dict_dep = {'aws': ('~aws/credentials', 'awscli')}
+    dict_dep = {
+        'aws': ('~aws/credentials', 'awscli'),
+        'gee': ('~config/earthengine/credentials', ''),
+        'dl': ('~descarteslabs/token_info.json', 'descarteslabs'),
+        'kaggle': ('~kaggle/kaggle.json', 'kaggle'),
+        'hyperdash': ('~hyperdash/hyperdash.json', 'hyperdash'),
+        'neptune': ('~neptune/api_token', 'neptune-client')
+    }
     if len(sys.argv) > 1:
         cmd = sys.argv[1]
         if cmd in ['clone', 'get']:
@@ -106,7 +114,7 @@ def main():
             run.push(amend_commit=cmd == 'update')
         else:  # fetch cred & snippets
             for cmd in sys.argv[1:]:
-                if cmd.startswith('-'): # options
+                if cmd.startswith('-'):  # options
                     continue
                 elif cmd in dict_dep:
                     cred, packages = dict_dep[cmd]
