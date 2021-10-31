@@ -72,7 +72,7 @@ class Gitta():
         os.system(f"git clone {repo_name}")
         if not keep_dir_level:
             os.system(
-                f"mv {repo_name}/.git . && rm -rf {repo_name} && git reset --hard"
+                f"mv {repo}/.git . && rm -rf {repo} && git reset --hard"
             )
 
     def push(self, repo, amend_commit=False):
@@ -85,7 +85,7 @@ class Gitta():
 
 
 help_text = """
-$ pip install -q git+https://git@github.com/suredream/guitar.git@main
+$ pip install -q git+https://git@github.com/suredream/guitar.git@master
 """
 
 
