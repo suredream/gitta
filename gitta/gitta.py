@@ -90,10 +90,9 @@ $ pip install -q git+https://git@github.com/suredream/guitar.git@main
 
 
 def main():
+    print('gitta is comming')
     run = Gitta()
-
     dict_dep = {'aws': ('~aws/credentials', 'awscli')}
-    #
     if len(sys.argv) > 1:
         cmd = sys.argv[1]
         if cmd in ['clone', 'get']:

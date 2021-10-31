@@ -10,7 +10,7 @@ with open("README.rst", "rb") as f:
     long_descr = f.read().decode("utf-8")
 
 setup(
-    name="cmdline-gitta",
+    name="gitta",
     packages=["gitta"],
     entry_points={"console_scripts": ['gitta = gitta.gitta:main']},
     version=version,
