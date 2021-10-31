@@ -92,7 +92,6 @@ $ gitta helpers.py -o
 
 
 def main():
-    print('gitta is comming')
     run = Gitta(verbose=True)
     dict_dep = {
         'aws': ('~aws/credentials', 'awscli'),
