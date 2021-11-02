@@ -31,13 +31,13 @@ class Gitta():
         if print_stdout:
             print(content)
         else:  # export to same filename
-            if src.startswith('~'):
-                folders = dest.split('/')
-                if len(folders) > 1:
-                    for i, dname in enumerate(folders):
-                        dirname = '/'.join(folders[:i]) if i else dname
-                        if dirname and not os.path.exists(dirname):
-                            os.mkdir(dirname)
+            # if src.startswith('~'):
+            folders = dest.split('/')
+            if len(folders) > 1:
+                for i, dname in enumerate(folders):
+                    dirname = '/'.join(folders[:i]) if i else dname
+                    if dirname and not os.path.exists(dirname):
+                        os.mkdir(dirname)
             with open(dest, 'w') as f:
                 f.write(content)
         if pip:
