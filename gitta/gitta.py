@@ -24,8 +24,8 @@ class Gitta():
         conn_str = self.repo.replace(
             'https://github',
             f'https://{self.token}@raw.githubusercontent') + f'/main/{src}'
-        if self.verbose:
-            print(conn_str)
+        # if self.verbose:
+        #     print(conn_str)
         content = os.popen(f'curl -s {conn_str}').read()
         assert content != '404: Not Found', f'{src} not found in gitta!'
         if print_stdout:
