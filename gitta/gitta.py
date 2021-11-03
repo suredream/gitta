@@ -17,10 +17,8 @@ class Gitta():
         self.token = self.get_token()
         self.verbose = verbose
 
-    def __call__(self, src, print_stdout=False, pip=''):
+    def __call__(self, src, print_stdout=False, pip='', update=False):
         dest = os.path.expanduser(src.replace('~', '~/.'))
-        if not src or os.path.isfile(dest):
-            return  # skip if already done or src is None
         conn_str = self.repo.replace(
             'https://github',
             f'https://{self.token}@raw.githubusercontent') + f'/main/{src}'
@@ -28,6 +26,9 @@ class Gitta():
         #     print(conn_str)
         content = os.popen(f'curl -s {conn_str}').read()
         assert content != '404: Not Found', f'{src} not found in gitta!'
+        if update and os.path.isfile(dest):
+            self.patch(dest)
+            return
         if print_stdout:
             print(content)
         else:  # export to same filename
@@ -77,6 +78,27 @@ class Gitta():
             f'git pull && git push "https://{self.token}@github.com/suredream/{repo}.git"'
         )
 
+    def patch(self,filename,branch='main'):
+        import base64, requests, json
+        url = self.repo.replace('https://github.com','https://api.github.com/repos') + f'/contents/{filename}'
+#         print(url)
+        base64content=base64.b64encode(open(filename,"rb").read())
+        data = requests.get(url+'?ref='+branch, headers = {"Authorization": "token "+self.token}).json()
+        sha = data['sha']
+
+        if base64content.decode('utf-8')+"\n" != data['content']:
+            message = json.dumps({"message":"update",
+                                "branch": branch,
+                                "content": base64content.decode("utf-8") ,
+                                "sha": sha
+                                })
+
+            resp=requests.put(url, data = message, headers = {"Content-Type": "application/json", "Authorization": "token "+self.token})
+
+            print(resp)
+        else:
+            print("nothing to update")
+
 
 help_text = """
 Install: 
@@ -121,6 +143,8 @@ def main():
                 else:  # snippets in mlops
                     if '-o' in sys.argv[1:]:
                         run(cmd)
+                    elif '-u' in sys.argv[1:]:
+                        run(cmd, update=True)
                     else:
                         run(cmd, print_stdout=True)
     else:

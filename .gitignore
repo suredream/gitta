@@ -2,3 +2,4 @@
 .DS_Store
 build/
 gitta.egg-info/
+**/.ipynb_checkpoints/
