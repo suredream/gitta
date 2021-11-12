@@ -9,7 +9,7 @@ the installation of the tools to save some keystrokes and time.
 Usage
 -----
 
-    $ pip install -q git+https://git@github.com/suredream/gitta.git@main
+    $ pip install -q git+https://git@github.com/suredream/gitta.git@master
     
     $ gitta aws
     
